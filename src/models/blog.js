@@ -14,7 +14,6 @@ const BlogSchema = new Schema(
     author: {
       type: String,
       required: true
-
     },
     date: {
       type: Date,
