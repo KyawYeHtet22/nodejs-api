@@ -29,7 +29,7 @@ function setupExpress () {
   )
   app.use('/server-status', (req, res) => {
     res.status(200).json({
-      message: `Object Store API [${process.env.NODE_ENV}] is up and running!`
+      message: 'Server is up and running!'
     })
   })
 
