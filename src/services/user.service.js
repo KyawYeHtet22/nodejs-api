@@ -5,14 +5,22 @@ import User from '../models/user'
 
 async function signupService ({ email, password }) {
   try {
+    // check if email already exists
+    const user = await User.findOne({ email })
+    if (user) {
+      const err = new Error()
+      err.message = 'Email already exists.'
+      err.status = 400
+      throw err
+    }
+
     const hash = await bcrypt.hash(password, 10)
 
     // create User
-    const user = new User({
+    await new User({
       email,
       password: hash
-    })
-    await user.save()
+    }).save()
 
     return { message: 'User was created successfully.' }
   } catch (error) {
