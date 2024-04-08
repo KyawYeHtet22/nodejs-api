@@ -16,5 +16,5 @@ router.post('/signup', signupValidation, signup)
 router.post('/signin', signinValidation, signin)
 
 export default app => {
-  app.use('/api/users', router)
+  app.use('/users', router)
 }

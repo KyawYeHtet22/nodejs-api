@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 
+import { checkAuth } from '../middlewares/auth.middleware'
 import { errorHandler } from '../middlewares/handlers.middleware'
 
 import path from 'path'
@@ -32,6 +33,7 @@ function setupExpress () {
       message: 'Server is up and running!'
     })
   })
+  app.use('/api' + '/*', checkAuth)
 
   const dir = path.join(__dirname, '../routes/*.js')
   const routes = glob.sync(dir.replace(/\\/g, '/'))
