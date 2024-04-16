@@ -26,7 +26,7 @@ async function getBlogService ({ id }) {
     const blog = await Blog.findById(id)
     if (!blog) {
       const err = new Error()
-      err.message = 'Blog not found'
+      err.message = 'Blog not found.'
       err.status = 404
       throw err
     }
@@ -46,7 +46,7 @@ async function updateBlogService ({ id, title, body, author, date }) {
     const blog = await Blog.findById(id)
     if (!blog) {
       const err = new Error()
-      err.message = 'Blog not found'
+      err.message = 'Blog not found.'
       err.status = 404
       throw err
     }
@@ -80,12 +80,12 @@ async function deleteBlogService ({ id }) {
     const blog = await Blog.findByIdAndDelete(id)
     if (!blog) {
       const err = new Error()
-      err.message = 'Blog not found'
+      err.message = 'Blog not found.'
       err.status = 404
       throw err
     }
 
-    return { message: 'Blog was deleted successfully' }
+    return { message: 'Blog was deleted successfully.' }
   } catch (error) {
     const err = new Error()
     err.message = error.message

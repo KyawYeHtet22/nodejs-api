@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "This is a simple API",
+    "description": "These are simple blog APIs",
     "version": "1.0.0",
-    "title": "Simple Inventory API",
+    "title": "Simple Blog APIs",
     "contact": {
       "email": "you@your-company.com"
     },
@@ -15,12 +15,12 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "admins",
-      "description": "For admins"
-    },
-    {
       "name": "users",
       "description": "For users"
+    },
+    {
+      "name": "blogs",
+      "description": "For blogs"
     }
   ],
   "schemes": [
@@ -28,40 +28,13 @@
     "https"
   ],
   "paths": {
-    "/heroes": {
-      "get": {
-        "tags": [
-          "admins",
-          "users"
-        ],
-        "summary": "Get heroes list",
-        "description": "By passing in the appropriate options, you can get for\navailable heroes in the system\n",
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Heroes"
-            }
-          },
-          "500": {
-            "description": "Fail",
-            "schema": {
-              "$ref": "#/definitions/FailMessage"
-            }
-          }
-        }
-      }
-    },
-    "/heroes/createHero": {
+    "/users/signup": {
       "post": {
         "tags": [
-          "admins"
+          "users"
         ],
-        "summary": "Create a hero",
-        "description": "Adds a hero to the system",
+        "summary": "Create a user",
+        "description": "Add a user to the system",
         "consumes": [
           "multipart/form-data"
         ],
@@ -70,93 +43,92 @@
         ],
         "parameters": [
           {
-            "name": "heroName",
+            "name": "email",
             "in": "formData",
             "type": "string",
             "required": true,
             "unique": true
           },
           {
-            "name": "heroType",
+            "name": "password",
             "in": "formData",
             "type": "string",
-            "required": true,
-            "enum": [
-              "Intelligent",
-              "Strength",
-              "Agility"
-            ]
+            "required": true
           }
         ],
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/Hero1"
+              "$ref": "#/definitions/SignupSuccess"
             }
           },
           "400": {
             "description": "Fail",
             "schema": {
-              "$ref": "#/definitions/FailMessage"
-            }
-          },
-          "500": {
-            "description": "Fail",
-            "schema": {
-              "$ref": "#/definitions/FailMessage"
+              "$ref": "#/definitions/EmailAlreadyExist"
             }
           }
         }
       }
     },
-    "/heroes/deleteHero/:heroId": {
-      "delete": {
+    "/users/signin": {
+      "post": {
         "tags": [
-          "admins"
+          "users"
         ],
-        "summary": "Delete hero",
-        "description": "Deleting a hero",
+        "summary": "Authenticate a user",
+        "description": "Check user's credentials for authentication",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "heroId",
-            "in": "path",
+            "name": "email",
+            "in": "formData",
+            "type": "string",
             "required": true,
-            "type": "string"
+            "unique": true
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "type": "string",
+            "required": true
           }
         ],
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/SuccessMessage"
+              "$ref": "#/definitions/SigninSuccess"
+            }
+          },
+          "400": {
+            "description": "Fail",
+            "schema": {
+              "$ref": "#/definitions/PasswordMismatch"
             }
           },
           "404": {
             "description": "Fail",
             "schema": {
-              "$ref": "#/definitions/FailMessage"
-            }
-          },
-          "500": {
-            "description": "Fail",
-            "schema": {
-              "$ref": "#/definitions/FailMessage"
+              "$ref": "#/definitions/EmailNotFound"
             }
           }
         }
       }
     },
-    "/heroes/updateHero/:heroId": {
-      "put": {
+    "api/blogs": {
+      "post": {
         "tags": [
-          "admins"
+          "blogs"
         ],
-        "summary": "Update a hero",
-        "description": "Update existed hero from the system",
+        "summary": "Create a blog",
+        "description": "Add a blog to the system",
         "consumes": [
           "multipart/form-data"
         ],
@@ -165,47 +137,167 @@
         ],
         "parameters": [
           {
-            "name": "heroId",
-            "in": "path",
+            "name": "Authorization",
+            "in": "header",
             "required": true,
             "type": "string"
           },
           {
-            "name": "heroName",
+            "name": "title",
             "in": "formData",
             "type": "string",
-            "required": true,
-            "unique": true
+            "required": true
           },
           {
-            "name": "heroType",
+            "name": "body",
             "in": "formData",
             "type": "string",
-            "required": true,
-            "enum": [
-              "Intelligent",
-              "Strength",
-              "Agility"
-            ]
+            "required": true
+          },
+          {
+            "name": "author",
+            "in": "formData",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "date",
+            "in": "formData",
+            "type": "date"
           }
         ],
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/SuccessMessage"
+              "$ref": "#/definitions/Blog"
+            }
+          }
+        }
+      }
+    },
+    "api/blogs/:id": {
+      "get": {
+        "tags": [
+          "blogs"
+        ],
+        "summary": "Get a blog",
+        "description": "By passing in the appropriate options, you can get a blog from the system",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Blog"
             }
           },
-          "400": {
+          "404": {
             "description": "Fail",
             "schema": {
-              "$ref": "#/definitions/FailMessage"
+              "$ref": "#/definitions/BlogNotFound"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "blogs"
+        ],
+        "summary": "Update a blog",
+        "description": "Update existed blog from the system",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "in": "formData",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "formData",
+            "type": "string"
+          },
+          {
+            "name": "author",
+            "in": "formData",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "in": "formData",
+            "type": "date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Blog"
             }
           },
-          "500": {
+          "404": {
             "description": "Fail",
             "schema": {
-              "$ref": "#/definitions/FailMessage"
+              "$ref": "#/definitions/BlogNotFound"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "blogs"
+        ],
+        "summary": "Delete blog",
+        "description": "Deleting a blog from the system",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BlogDeleteSuccess"
+            }
+          },
+          "404": {
+            "description": "Fail",
+            "schema": {
+              "$ref": "#/definitions/BlogNotFound"
             }
           }
         }
@@ -213,7 +305,52 @@
     }
   },
   "definitions": {
-    "Hero": {
+    "SignupSuccess": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "User was created successfully."
+        }
+      }
+    },
+    "EmailAlreadyExist": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Email already exists."
+        }
+      }
+    },
+    "SigninSuccess": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        }
+      }
+    },
+    "EmailNotFound": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Email not found."
+        }
+      }
+    },
+    "PasswordMismatch": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Password mismatch."
+        }
+      }
+    },
+    "Blog": {
       "type": "object",
       "properties": {
         "id": {
@@ -221,13 +358,21 @@
           "format": "uuid",
           "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
         },
-        "heroName": {
+        "title": {
           "type": "string",
           "example": "Slark"
         },
-        "heroType": {
+        "body": {
           "type": "string",
           "example": "Agility"
+        },
+        "author": {
+          "type": "string",
+          "example": "Author"
+        },
+        "date": {
+          "type": "date",
+          "example": "2016-08-29T09:12:33.001Z"
         },
         "createdAt": {
           "type": "string",
@@ -245,69 +390,21 @@
         }
       }
     },
-    "Hero1": {
-      "type": "object",
-      "properties": {
-        "hero": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string",
-              "format": "uuid",
-              "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
-            },
-            "heroName": {
-              "type": "string",
-              "example": "Slark"
-            },
-            "heroType": {
-              "type": "string",
-              "example": "Agility"
-            },
-            "createdAt": {
-              "type": "string",
-              "format": "date-time",
-              "example": "2016-08-29T09:12:33.001Z"
-            },
-            "updatedAt": {
-              "type": "string",
-              "format": "date-time",
-              "example": "2016-08-29T09:12:33.001Z"
-            },
-            "__v": {
-              "type": "int",
-              "example": 0
-            }
-          }
-        }
-      }
-    },
-    "Heroes": {
-      "type": "object",
-      "properties": {
-        "heroes": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Hero"
-          }
-        }
-      }
-    },
-    "SuccessMessage": {
+    "BlogNotFound": {
       "type": "object",
       "properties": {
         "message": {
           "type": "string",
-          "example": "Deleted/Updated Successfully"
+          "example": "Blog not found."
         }
       }
     },
-    "FailMessage": {
+    "BlogDeleteSuccess": {
       "type": "object",
       "properties": {
         "message": {
           "type": "string",
-          "example": "Something went wrong"
+          "example": "Blog was deleted successfully."
         }
       }
     }

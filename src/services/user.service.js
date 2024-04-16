@@ -37,7 +37,7 @@ async function signinService ({ email, password }) {
     const user = await User.findOne({ email })
     if (!user) {
       const err = new Error()
-      err.message = 'Email not found'
+      err.message = 'Email not found.'
       err.status = 404
       throw err
     }
